@@ -14,14 +14,14 @@ router.get('/', async(ctx, next) => {
         page = ctx.querystring.split('=')[1];
     }
     await checkLogin(ctx)
-    await apiModel.findData('videos').then(res => {
+    await apiModel.findData('articles').then(res => {
         dataLength = res.length
     })
-    await apiModel.findPageData('videos', page, 7).then(res => {
+    await apiModel.findPageData('articles', page, 7).then(res => {
         data = JSON.parse(JSON.stringify(res))
     })
     await ctx.render('list', {
-        videos: data,
+        articles: data,
         session: ctx.session,
         dataLength: Math.ceil(dataLength / 7),
         nowPage:  parseInt(page)
@@ -60,14 +60,14 @@ router.get('/signout', async(ctx, next) => {
     await ctx.redirect('/')
 })
 
-// 上传video数据
+// 上传article数据
 router.get('/upload', async(ctx, next) => {
     await checkLogin(ctx)
     await ctx.render('upload', {
         session: ctx.session
     })
 })
-// 上传video数据 post
+// 上传article数据 post
 router.post('/upload', koaBody({
     multipart: true,
     "formLimit":"5mb",
