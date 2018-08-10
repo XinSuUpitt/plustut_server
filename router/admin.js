@@ -20,7 +20,7 @@ router.get('/', async(ctx, next) => {
     await apiModel.findPageData('articles', page, 7).then(res => {
         data = JSON.parse(JSON.stringify(res))
     })
-    await ctx.render('list', {
+    await ctx.render('articlelist', {
         articles: data,
         session: ctx.session,
         dataLength: Math.ceil(dataLength / 7),
@@ -70,8 +70,8 @@ router.get('/upload', async(ctx, next) => {
 // 上传article数据 post
 router.post('/upload', koaBody({
     multipart: true,
-    "formLimit":"5mb",
     "jsonLimit":"5mb",
+    "textLimit":"5mb",
     "textLimit":"5mb",
     formidable: {
         uploadDir: './public/images'
@@ -80,15 +80,42 @@ router.post('/upload', koaBody({
 
     var i_body = Object.assign({},ctx.request.body)
     console.log('i_body', i_body)
-    let {videoName,videoCountry,videoClassify,videoTime,
-        videoStar, videoTimeLong, videoType,
-        videoActors,videoDetail} = i_body['fields']
+    let {articlename,authorname,avator,description,
+        time, detail, url} = i_body['fields']
     var img = i_body['files']['file']['path']
-    var data = [videoName, videoCountry, videoClassify, videoTime,
-                 img.match(/\w+/g)[2], videoStar, videoTimeLong, 
-                 videoType, videoActors, videoDetail]
+    var data = [articlename, authorname, img.match(/\w+/g)[2], description,
+                 time, detail, 
+                 url]
     console.log(data)
     await apiModel.insertData(data)
+        .then((res) => {
+            console.log('添加成功')
+            ctx.body = {
+                code:200,
+                message:'上传成功'
+            }
+        }).catch(res => {
+            ctx.body = {
+                code: 500,
+                message: '上传失败'
+            }
+        })
+        
+})
+
+router.post('/uploadClass', koaBody({
+    multipart: true,
+    "jsonLimit":"5mb"
+}), async(ctx, next) => {
+
+    var i_body = Object.assign({},ctx.request.body)
+    console.log('i_body', i_body)
+    let {class_name,teacher_id,price,start_time,
+        end_time, class_date, description} = i_body['fields']
+    var data = [class_name,teacher_id,price,start_time,
+        end_time, class_date, description]
+    console.log(data)
+    await apiModel.insertClass(data)
         .then((res) => {
             console.log('添加成功')
             ctx.body = {
@@ -190,10 +217,10 @@ router.get('/adminUser',async(ctx,next)=>{
     }else{
         page = ctx.querystring.split('=')[1];
     }
-    await apiModel.findData('users').then(res => {
+    await apiModel.findData('teachers').then(res => {
         dataLength = res.length
     })
-    await apiModel.findPageData('users', page, 15).then(res => {
+    await apiModel.findPageData('teachers', page, 15).then(res => {
         data = res
     })
     await ctx.render('adminUser', {
@@ -268,6 +295,12 @@ router.get('/like',async(ctx,next)=>{
         session: ctx.session,
         dataLength: Math.ceil(dataLength / 15),
         nowPage: parseInt(page)
+    })
+})
+
+router.get('/calendar',async(ctx,next)=>{
+
+    await ctx.render('calendar', {
     })
 })
 module.exports = router
