@@ -11,6 +11,7 @@ const compress = require('koa-compress')
 const logger = require('koa-logger')
 const cors = require('koa-cors')
 const router = require('koa-router')
+const serve = require('koa-static');
 var route = new router();
 const app = new Koa()
 
@@ -42,6 +43,8 @@ app.use(require('./router/mobile.js').routes()).use(route.allowedMethods())
 
 
 app.use(koaBody({ multipart: true,formidable:{uploadDir: path.join(__dirname,'./public/images')}}));
+
+app.use(serve(__dirname));
 
 app.listen(3000)
 

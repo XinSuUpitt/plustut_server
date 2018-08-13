@@ -45,14 +45,14 @@
 <body>
 	<div class="ui inverted segment"  style="margin-top: 0;">
 	    <div class="ui inverted secondary menu">
-			<a class="item"  href="/">课程</a>
-			<a class="item" href="/">文章</a>
-	    	<a class="item" href="/upload">上传数据</a>
-	    	<a class="item" href="/adminUser?page=1">后台管理员列表</a>
-	    	<a class="item" href="/mobileUser?page=1">用户列表</a>
-	    	<a class="item" href="/comment?page=1">用户评论</a>
-			<a class="item" href="/like?page=1">喜欢/不喜欢</a>
-			<a class="item" href="/calendar">日历</a>
+			<a class="item"  href="/admin">课程</a>
+			<a class="item" href="/admin">文章</a>
+	    	<a class="item" href="/admin/upload">上传数据</a>
+	    	<a class="item" href="/admin/adminUser?page=1">后台管理员列表</a>
+	    	<a class="item" href="/admin/mobileUser?page=1">用户列表</a>
+	    	<a class="item" href="/admin/comment?page=1">用户评论</a>
+			<a class="item" href="/admin/like?page=1">喜欢/不喜欢</a>
+			<a class="item" href="/admin/calendar">日历</a>
 		  	<div class="right menu">
 				<div class="ui item dropdown">
 			    	<div class="text">
@@ -67,7 +67,7 @@
 						    登出操作
 						    </div>
 						    <% if(session.user){ %>
-				    	  <a class="item" href="/signout">
+				    	  <a class="item" href="/admin/signout">
 						    	登出
 						    </a>
 				    	   <% } %>

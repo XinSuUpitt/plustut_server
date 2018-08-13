@@ -1,10 +1,10 @@
 module.exports = {
 	port:3000,
 	database:{
-		DATABASE: 'plusTuT',
-	    USER: 'root',
+		DATABASE: 'plustut',
+	    USER: 'xinsu',
 	    PASSWORD: 'catherine100529',
-		HOST: 'localhost',
+		HOST: 'plustut.cxsxaix1kweg.ap-northeast-2.rds.amazonaws.com',
 		PORT: 3306
 	},
 	jwt_secret: 'ddff0a63e06816ddd7b7d2e2ebc1e40205'

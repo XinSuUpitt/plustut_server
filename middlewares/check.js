@@ -6,7 +6,7 @@ let config = require('../config/default.js')
 module.exports = {
 	checkLogin:ctx=>{
 		if (!ctx.session || !ctx.session.user) {
-			ctx.redirect('/signin')
+			ctx.redirect('/admin/signin')
 		}
 	},
 	checkToken:async ctx=>{

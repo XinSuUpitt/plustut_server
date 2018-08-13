@@ -3,9 +3,10 @@ var apiModel = require('../lib/sql.js')
 var path = require('path')
 var koaBody = require('koa-body')
 var checkLogin = require('../middlewares/check.js').checkLogin
-var fs = require('fs')
+var http = require('http');
+var fs = require('fs');
 
-router.get('/', async(ctx, next) => {
+router.get('/admin', async(ctx, next) => {
     var page
     let dataLength = ''
     if (ctx.querystring == '') {
@@ -28,7 +29,7 @@ router.get('/', async(ctx, next) => {
     })
 })
 // 获取登录页面
-router.get('/signin', async(ctx, next) => {
+router.get('/admin/signin', async(ctx, next) => {
     if (ctx.session.user) {
         await ctx.redirect('/')
     } else {
@@ -36,7 +37,7 @@ router.get('/signin', async(ctx, next) => {
     }
 })
 // 登录 post
-router.post('/signin', koaBody(), async(ctx, next) => {
+router.post('/admin/signin', koaBody(), async(ctx, next) => {
     var {userName,password} = ctx.request.body
     await apiModel.findUser(userName)
         .then(res => {
@@ -55,20 +56,20 @@ router.post('/signin', koaBody(), async(ctx, next) => {
 
 })
 // 登出
-router.get('/signout', async(ctx, next) => {
+router.get('/admin/signout', async(ctx, next) => {
     ctx.session = null;
     await ctx.redirect('/')
 })
 
 // 上传article数据
-router.get('/upload', async(ctx, next) => {
+router.get('/admin/upload', async(ctx, next) => {
     await checkLogin(ctx)
     await ctx.render('upload', {
         session: ctx.session
     })
 })
 // 上传article数据 post
-router.post('/upload', koaBody({
+router.post('/admin/upload', koaBody({
     multipart: true,
     "jsonLimit":"5mb",
     "textLimit":"5mb",
@@ -103,7 +104,7 @@ router.post('/upload', koaBody({
         
 })
 
-router.post('/uploadClass', koaBody({
+router.post('/admin/uploadClass', koaBody({
     multipart: true,
     "jsonLimit":"5mb"
 }), async(ctx, next) => {
@@ -131,7 +132,7 @@ router.post('/uploadClass', koaBody({
         
 })
 // 编辑页面
-router.get('/edit/:id', async(ctx, next) => {
+router.get('/admin/edit/:id', async(ctx, next) => {
     // console.log('params.id', ctx.params.id)
     await apiModel.findDataById(ctx.params.id)
         .then(res => {
@@ -143,7 +144,7 @@ router.get('/edit/:id', async(ctx, next) => {
     })
 })
 // 编辑 post
-router.post('/edit/:id', koaBody({
+router.post('/admin/edit/:id', koaBody({
     multipart: true,
     "formLimit":"5mb",
     "jsonLimit":"5mb",
@@ -199,7 +200,7 @@ router.post('/edit/:id', koaBody({
          
 })
 // 删除
-router.post('/delete/:id', koaBody(), async(ctx, next) => {
+router.post('/admin/delete/:id', koaBody(), async(ctx, next) => {
     await apiModel.deleteVideo(ctx.params.id)
         .then(() => {
             ctx.body = 'success'
@@ -209,7 +210,7 @@ router.post('/delete/:id', koaBody(), async(ctx, next) => {
 })
 
 // 后台管理员列表
-router.get('/adminUser',async(ctx,next)=>{
+router.get('/admin/adminUser',async(ctx,next)=>{
     var page,
         dataLength = '';
     if (ctx.querystring == '') {
@@ -231,7 +232,7 @@ router.get('/adminUser',async(ctx,next)=>{
     })
 })
 // 手机端用户列表
-router.get('/mobileUser',async(ctx,next)=>{
+router.get('/admin/mobileUser',async(ctx,next)=>{
     var page,
         dataLength = '';
     if (ctx.querystring == '') {
@@ -253,7 +254,7 @@ router.get('/mobileUser',async(ctx,next)=>{
     })
 })
 // 手机端评论列表
-router.get('/comment',async(ctx,next)=>{
+router.get('/admin/comment',async(ctx,next)=>{
     var page,
         dataLength = '';
     if (ctx.querystring == '') {
@@ -276,7 +277,7 @@ router.get('/comment',async(ctx,next)=>{
     })
 })
 // 手机端like列表
-router.get('/like',async(ctx,next)=>{
+router.get('/admin/like',async(ctx,next)=>{
     var page,
         dataLength = '';
     if (ctx.querystring == '') {
@@ -298,7 +299,7 @@ router.get('/like',async(ctx,next)=>{
     })
 })
 
-router.get('/calendar',async(ctx,next)=>{
+router.get('/admin/calendar',async(ctx,next)=>{
 
     await ctx.render('calendar', {
     })
