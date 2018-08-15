@@ -21,31 +21,48 @@ const sessionMysqlConfig = {
 	host:config.database.HOST,
 	database:config.database.DATABASE
 }
-app.use(logger())
-app.use(cors())
-app.use(session({
-	key:'USER_SID',
-	store:new MysqlStore(sessionMysqlConfig)
-}))
-app.use(staticCache(path.join(__dirname, './public'),{dynamic: true}, {
-  maxAge: 365 * 24 * 60 * 60
-}))
-app.use(staticCache(path.join(__dirname, './public/avator'),{dynamic: true}, {
-  maxAge: 365 * 24 * 60 * 60
-}))
+// app.use(logger())
+// app.use(cors())
+// app.use(session({
+// 	key:'USER_SID',
+// 	store:new MysqlStore(sessionMysqlConfig)
+// }))
+// app.use(staticCache(path.join(__dirname, './public'),{dynamic: true}, {
+//   maxAge: 365 * 24 * 60 * 60
+// }))
+// app.use(staticCache(path.join(__dirname, './public/avator'),{dynamic: true}, {
+//   maxAge: 365 * 24 * 60 * 60
+// }))
 
-app.use(views(path.join(__dirname,'./views'),{
-	extension: 'ejs'
-}))
-app.use(compress({threshold: 2048}))
-app.use(require('./router/admin.js').routes()).use(route.allowedMethods())
-app.use(require('./router/mobile.js').routes()).use(route.allowedMethods())
+// app.use(views(path.join(__dirname,'./views'),{
+// 	extension: 'ejs'
+// }))
+// app.use(compress({threshold: 2048}))
+// app.use(require('./router/admin.js').routes()).use(route.allowedMethods())
+// app.use(require('./router/mobile.js').routes()).use(route.allowedMethods())
 
 
-app.use(koaBody({ multipart: true,formidable:{uploadDir: path.join(__dirname,'./public/images')}}));
+// app.use(koaBody({ multipart: true,formidable:{uploadDir: path.join(__dirname,'./public/images')}}));
 
-app.use(serve(__dirname));
+// app.use(serve(__dirname));
 
-app.listen(3000)
+// app.listen(3000)
 
-console.log('listen in 3000')
+// console.log('listen in 3000')
+var fs = require('fs');
+var http = require('http');
+var https = require('https');
+var express = require('express');
+var path = require('path');
+
+var privateKey  = fs.readFileSync('~/sslcert/server.key', 'utf8');
+var certificate = fs.readFileSync('~/sslcert/server.crt', 'utf8');
+var ca = [ fs.readFileSync('~/sslcert/intermediate.crt', 'utf8') ];
+var credentials = {ca: ca, key: privateKey, cert: certificate};
+
+var app = express();
+var routes = require('./router')(app);
+var httpServer = http.createServer(app);
+var httpsServer = https.createServer(credentials, app);
+httpServer.listen(3000);
+httpsServer.listen(4433);
