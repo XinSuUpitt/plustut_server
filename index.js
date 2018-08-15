@@ -59,7 +59,6 @@ var certificate = fs.readFileSync('~/sslcert/server.crt', 'utf8');
 var ca = [ fs.readFileSync('~/sslcert/intermediate.crt', 'utf8') ];
 var credentials = {ca: ca, key: privateKey, cert: certificate};
 
-var app = express();
 var routes = require('./router')(app);
 var httpServer = http.createServer(app);
 var httpsServer = https.createServer(credentials, app);
