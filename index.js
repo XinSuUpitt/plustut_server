@@ -53,7 +53,6 @@ var fs = require('fs');
 var http = require('http');
 var https = require('https');
 var express = require('express');
-var path = require('path');
 
 var privateKey  = fs.readFileSync('~/sslcert/server.key', 'utf8');
 var certificate = fs.readFileSync('~/sslcert/server.crt', 'utf8');
