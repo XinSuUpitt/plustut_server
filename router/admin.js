@@ -31,7 +31,7 @@ router.get('/admin', async(ctx, next) => {
 // 获取登录页面
 router.get('/admin/signin', async(ctx, next) => {
     if (ctx.session.user) {
-        await ctx.redirect('/')
+        await ctx.redirect('/admin')
     } else {
         await ctx.render('signin')
     }
@@ -45,20 +45,20 @@ router.post('/admin/signin', koaBody(), async(ctx, next) => {
             if (res[0]['username'] === userName) {
                 ctx.session.user = userName;
                 ctx.session.pass = password;
-                ctx.redirect('/')
+                ctx.redirect('/admin')
             }
         }).catch(() => {
             ctx.session.user = userName;
             ctx.session.pass = password;
             apiModel.addUser([userName, password])
         })
-    await ctx.redirect('/')
+    await ctx.redirect('/admin')
 
 })
 // 登出
 router.get('/admin/signout', async(ctx, next) => {
     ctx.session = null;
-    await ctx.redirect('/')
+    await ctx.redirect('/admin')
 })
 
 // 上传article数据
@@ -240,12 +240,13 @@ router.get('/admin/mobileUser',async(ctx,next)=>{
     }else{
         page = ctx.querystring.split('=')[1];
     }
-    await apiModel.findData('mobileusers').then(res => {
+    await apiModel.findData('students').then(res => {
         dataLength = res.length
     })
-    await apiModel.findPageData('mobileusers',page,10).then(res=>{
+    await apiModel.findPageData('students',page,10).then(res=>{
         data = res
     })
+    console.log('mobileusers', data);
     await ctx.render('mobileUser',{
         users:data,
         session:ctx.session,
@@ -253,10 +254,35 @@ router.get('/admin/mobileUser',async(ctx,next)=>{
         nowPage:  parseInt(page)
     })
 })
+// 手机端用户列表
+router.get('/admin/classlist',async(ctx,next)=>{
+    var page,
+     dataLength = '';
+    if (ctx.querystring == '') {
+        page = 1
+    }else{
+        page = ctx.querystring.split('=')[1];
+    }
+    // await checkLogin(ctx)
+    await apiModel.findData('classes').then(res => {
+        dataLength = res.length,
+        data = res
+    })
+    // await apiModel.findPageData('classes', page, 7).then(res => {
+    //     data = JSON.parse(JSON.stringify(res))
+    // })
+    console.log('class', data, dataLength, parseInt(page));
+    await ctx.render('classlist', {
+        classs: data,
+        session: ctx.session,
+        dataLength: Math.ceil(dataLength / 7),
+        nowPage:  parseInt(page)
+    })
+})
 // 手机端评论列表
 router.get('/admin/comment',async(ctx,next)=>{
     var page,
-        dataLength = '';
+    dataLength = '';
     if (ctx.querystring == '') {
         page = 1
     }else{

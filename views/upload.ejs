@@ -126,7 +126,7 @@
         });
         formdata.append('description',$('textarea').val());
         $.ajax({
-            url: '/uploadClass',
+            url: '/admin/uploadClass',
             type: 'POST',
             cache: false,
             data: formdata,
@@ -137,7 +137,7 @@
                 isAllow = true
                 if (data.code == 200) {
                     alert('上传成功')
-                    location.href = '/'
+                    location.href = '/admin'
                     formdata = new FormData()
                 }else{
                   alert('上传失败')  
