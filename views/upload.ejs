@@ -5,6 +5,13 @@
     <label>课程名称</label>
     <input type="text" name="class_name" placeholder="课程名称">
   </div>
+  <div class="field">
+      <label>课程级别</label>
+      <select class="ui fluid search dropdown" name="elementary">
+          <option value="小学">小学</option>
+          <option value="中学">中学</option>
+      </select>
+  </div>
   <div class="fields equal width">
     <div class="field">
       <label>老师名字</label>
@@ -138,7 +145,13 @@
       on  : 'blur',
       onSuccess: function () {
         isAllow = false;
-        ['class_name', 'teacher_id', 'price', 'start_time', 'end_time', 'class_start_date', 'class_end_date'].forEach(function (val) {
+        ['class_name'].forEach(function(val) {
+          formdata.append(val, $('input[name=' + val + ']').val())
+        });
+        ['elementary'].forEach(function(val) {
+          formdata.append(val, $('select[name=' + val + ']').val())
+        });
+        ['teacher_id', 'price', 'start_time', 'end_time', 'class_start_date', 'class_end_date'].forEach(function (val) {
             formdata.append(val, $('input[name=' + val + ']').val())
         });
         ['weekday'].forEach(function(val) {

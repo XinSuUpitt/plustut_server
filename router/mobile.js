@@ -484,7 +484,6 @@ router.get('/api/getClasses', koaBody(), async(ctx) => {
     var val = ctx.request.body.val
     // console.log(val)
     await apiModel.getClasses(val).then(res=>{
-        // console.log('搜索结果',res)
         ctx.body = {
             code:200,
             data:res,
