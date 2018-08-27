@@ -40,6 +40,41 @@ router.post('/api/signin', koaBody(), async (ctx, next) => {
             }
         }).catch(() => {
             ctx.body = {
+                code: 404,
+                message: '用户名不存在，请注册'
+            }
+        })
+})
+router.post('/api/register', koaBody(), async (ctx, next) => {
+    var data = ctx.request.body
+    data = typeof data == 'string' ? JSON.parse(data) : data
+    var name = data.userName
+    var pass = data.password;
+    
+    let token = jwt.sign({
+        userName: name
+    }, config.jwt_secret , {
+        expiresIn: '30 days'
+    });
+    
+    await apiModel.findMobileUserByName(name)
+        .then(res => {
+            // console.log('用户信息', res)
+            if (res[0]['userName'] === name && res[0]['password'] === pass) {
+                ctx.body = {
+                    code: 200,
+                    avator: res[0]['avator'],
+                    token: token,
+                    message: '登录成功'
+                }
+            } else {
+                ctx.body = {
+                    code: 500,
+                    message: '用户名或密码错误'
+                }
+            }
+        }).catch(() => {
+            ctx.body = {
                 code: 201,
                 msg: '注册成功',
                 token: token
@@ -506,6 +541,29 @@ router.post('/api/addClass', koaBody(),async(ctx) => {
         ctx.body = err
         return
     })
+})
+
+router.post('/api/getStudentClass',koaBody(),async(ctx)=>{
+    
+    await apiModel.getClassesByStudentId(ctx.request.body.student_id)
+        .then(res=>{
+            console.log(res)
+            if (res.length >= 1 ) {
+                // console.log(Object.assign({},res[0]))
+                ctx.body = {
+                    code: 200,
+                    data: res
+                }
+            }else{
+                // 没有上传头像
+                ctx.body = {
+                    code: 200
+                }
+            }
+        }).catch(err=>{
+            ctx.body = 'none'
+        })
+
 })
 
 module.exports = router

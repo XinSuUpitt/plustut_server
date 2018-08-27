@@ -112,9 +112,9 @@ router.post('/admin/uploadClass', koaBody({
     var i_body = Object.assign({},ctx.request.body)
     console.log('i_body', i_body)
     let {class_name,teacher_id,price,start_time,
-        end_time, class_date, description} = i_body['fields']
-    var data = [class_name,teacher_id,price,start_time,
-        end_time, class_date, description]
+        end_time, class_start_date, class_end_date, weekday, description} = i_body['fields']
+    var data = [class_name,parseInt(teacher_id),parseInt(price),start_time,
+        end_time, class_start_date, class_end_date, parseInt(weekday[1]), description]
     console.log(data)
     await apiModel.insertClass(data)
         .then((res) => {
@@ -265,15 +265,50 @@ router.get('/admin/classlist',async(ctx,next)=>{
     }
     // await checkLogin(ctx)
     await apiModel.findData('classes').then(res => {
-        dataLength = res.length,
+        dataLength = res.length
+    })
+    await apiModel.findPageData('classes', page, 7).then(res => {
         data = res
     })
-    // await apiModel.findPageData('classes', page, 7).then(res => {
-    //     data = JSON.parse(JSON.stringify(res))
-    // })
-    console.log('class', data, dataLength, parseInt(page));
+    for (var i = 0; i < data.length; i++) {
+        await apiModel.getTeachersById(data[i].teacher_id).then(res => {
+            console.log('teacher', res);
+            data[i].teacherName = res[0].username;
+        })
+        var startDate = new Date(data[i].start_date)
+        var endDate = new Date(data[i].end_date)
+        data[i].start_date = (startDate.getMonth() + 1) + '/' + startDate.getDate() + '/' + startDate.getFullYear()
+        data[i].end_date = (endDate.getMonth() + 1) + '/' + endDate.getDate() + '/' + endDate.getFullYear()
+        switch (data[i].week_day) {
+            case 0:
+                data[i].week_day = '星期日'
+                break;
+            case 1:
+                data[i].week_day = '星期一'
+                break;
+            case 2:
+                data[i].week_day = '星期二'
+                break;
+            case 3:
+                data[i].week_day = '星期三'
+                break;
+            case 4:
+                data[i].week_day = '星期四'
+                break;
+            case 5:
+                data[i].week_day = '星期五'
+                break;
+            case 6:
+                data[i].week_day = '星期六'
+                break;
+            default:
+                data[i].week_day = '未确定日期'
+
+        }
+        
+    }
     await ctx.render('classlist', {
-        classs: data,
+        classes: data,
         session: ctx.session,
         dataLength: Math.ceil(dataLength / 7),
         nowPage:  parseInt(page)

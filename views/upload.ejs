@@ -43,8 +43,24 @@
 
   <div class="field">
     <label>上课日期</label>
-    <input type="date" name="class_date" placeholder="上课日期">
+    <input type="date" name="class_start_date" placeholder="上课起始日期">
+    <label> 至 </label>
+    <input type="date" name="class_end_date" placeholder="上课结束日期">
   </div>
+
+  <div class="field">
+      <label>哪天上课</label>
+      <select class="ui fluid search dropdown" name="weekday">
+        <option value="">星期</option>
+        <option value="星期日">星期日</option>
+        <option value="星期一">星期一</option>
+        <option value="星期二">星期二</option>
+        <option value="星期三">星期三</option>
+        <option value="星期四">星期四</option>
+        <option value="星期五">星期五</option>
+        <option value="星期六">星期六</option>
+      </select>
+    </div>
 
   <div class="field">
     <label>课程价格</label>
@@ -113,6 +129,7 @@
     $('select.dropdown').dropdown()
     var formdata = new FormData()
     
+    
     var isAllow = true
     if(!isAllow) return
     $('.ui.form')
@@ -121,9 +138,13 @@
       on  : 'blur',
       onSuccess: function () {
         isAllow = false;
-        ['class_name', 'teacher_id', 'price', 'start_time', 'end_time', 'class_date'].forEach(function (val) {
+        ['class_name', 'teacher_id', 'price', 'start_time', 'end_time', 'class_start_date', 'class_end_date'].forEach(function (val) {
             formdata.append(val, $('input[name=' + val + ']').val())
         });
+        ['weekday'].forEach(function(val) {
+            formdata.append(val, $('select[name=' + val + ']').val())
+        });
+        formdata.append('weekday', 0);
         formdata.append('description',$('textarea').val());
         $.ajax({
             url: '/admin/uploadClass',
