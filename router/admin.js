@@ -316,9 +316,15 @@ router.get('/admin/classlist',async(ctx,next)=>{
 })
 
 router.get('/admin/getClassesCalendar', async(ctx, next) => {
+    var userId = 1;
+    await apiModel.getTeachersByName(ctx.session.user).then(res => {
+        userId = res[0].id;
+        console.log('userid', userId);
+    }).catch((err) => {
+
+    });
     var events = [];
-    await apiModel.getClassesByTeacherId(1).then(res => {
-        console.log('res', res);
+    await apiModel.getClassesByTeacherId(userId).then(res => {
         var index = 1;
         for (var i = 0; i < res.length; i++) {
             var ev = res[i];
@@ -335,7 +341,7 @@ router.get('/admin/getClassesCalendar', async(ctx, next) => {
                 var date = tempDate.getDate();
                 events.push({
                     id: index,
-                    title: ev.class_name,
+                    text: ev.class_name,
                     start_date: year + '-' + month + '-' + date + ' ' + ev.start_time,
                     end_date: year + '-' + month + '-' + date + ' ' + ev.end_time
                 })
