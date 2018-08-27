@@ -314,6 +314,53 @@ router.get('/admin/classlist',async(ctx,next)=>{
         nowPage:  parseInt(page)
     })
 })
+
+router.get('/admin/getClassesCalendar', async(ctx, next) => {
+    var events = [];
+    await apiModel.getClassesByTeacherId(1).then(res => {
+        console.log('res', res);
+        var index = 1;
+        for (var i = 0; i < res.length; i++) {
+            var ev = res[i];
+            var day = ev.week_day;
+            var date1 = new Date(ev.start_date);
+            var date2 = new Date(ev.end_date);
+            var dates = getDaysBetweenDates(new Date(date1.getFullYear(), date1.getMonth(), date1.getDate()), 
+                                                    new Date(date2.getFullYear(), date2.getMonth(), date2.getDate()), day);
+            
+            for (var j = 0; j < dates.length; j++) {
+                var tempDate = dates[j];
+                var year = tempDate.getFullYear();
+                var month = tempDate.getMonth() + 1;
+                var date = tempDate.getDate();
+                events.push({
+                    id: index,
+                    title: ev.class_name,
+                    start_date: year + '-' + month + '-' + date + ' ' + ev.start_time,
+                    end_date: year + '-' + month + '-' + date + ' ' + ev.end_time
+                })
+                index++;
+            }
+        }
+        ctx.body = events
+
+        function getDaysBetweenDates(start, end, day) {
+            var result = [];
+            // Copy start date
+            var current = new Date(start);
+            // Shift to next of required days
+            current.setDate(current.getDate() + (day - current.getDay() + 7) % 7);
+            // While less than end date, add dates to result array
+            while (current < end) {
+                result.push(new Date(+current));
+                current.setDate(current.getDate() + 7);
+            }
+            return result;  
+        }        
+    }).catch((err) => {
+        console.log(err)
+    })
+})
 // 手机端评论列表
 router.get('/admin/comment',async(ctx,next)=>{
     var page,
