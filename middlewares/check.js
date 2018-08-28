@@ -14,7 +14,7 @@ module.exports = {
 		// console.log('token', ctx.get('token'))
 		var data = ctx.request.body
 		let {userName} = data
-		// console.log('token', token, userName)
+		console.log('token', token, userName)
 		return new Promise((reslove,reject)=>{
 			jwt.verify(token, config.jwt_secret, (err, decoded) => {
 				if (err) {
@@ -39,18 +39,18 @@ module.exports = {
 					*/
 				} else {
 					console.log('token success', decoded)
-					if (userName === decoded.userName){
-						reslove({
-							code:200,
-							message:'验证成功'
-						})
-					}else{
-						reject({
-							code: 404,
-							message: '用户身份不一致'
-						})
-					}
-					
+					// if (userName === decoded.userName){
+						
+					// }else{
+					// 	reject({
+					// 		code: 404,
+					// 		message: '用户身份不一致'
+					// 	})
+					// }
+					reslove({
+						code:200,
+						message:'验证成功'
+					})
 				}
 			});
 		})

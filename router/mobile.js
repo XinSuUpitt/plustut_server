@@ -480,6 +480,20 @@ router.get('/api/getteachers', koaBody(), async(ctx)=>{
     })
 })
 
+router.post('/api/getStudentIdByName', koaBody(), async(ctx)=>{
+    var val = ctx.request.body.name
+    // console.log('val', val)
+    await apiModel.findStudent(val).then(res=>{
+        // console.log('搜索结果',res)
+        ctx.body = {
+            code:200,
+            data:res,
+            message:'获取搜索结果成功',
+            total:res.length
+        }
+    })
+})
+
 router.post('/api/getteachers',koaBody(),async(ctx)=>{
     
     await apiModel.getTeachersById(ctx.request.body.teacher_id)
@@ -530,22 +544,23 @@ router.get('/api/get_articles', koaBody(), async(ctx) => {
 })
 
 router.post('/api/addClass', koaBody(),async(ctx) => {
-    var {student_id,teacher_id} = ctx.request.body
+    var {student_id,class_id} = ctx.request.body
 
-    await apiModel.addClass([student_id,teacher_id]).then(res=>{
-        // console.log('搜索结果',res)
-        ctx.body = {
-            code:200,
-            data:res,
-            message:'获取搜索结果成功',
-            total:res.length
-        }
-    })
+    // await apiModel.addClass([student_id,class_id]).then(res=>{
+    //     // console.log('搜索结果',res)
+    //     ctx.body = {
+    //         code:200,
+    //         data:res,
+    //         message:'获取搜索结果成功',
+    //         total:res.length
+    //     }
+    // })
+    // console.log(ctx)
     await checkToken(ctx).then(async res=>{
         // console.log(res)
-        await apiModel.addClass([student_id,teacher_id])
+        await apiModel.addClass([student_id,class_id])
             .then(res => {
-                // console.log(res)
+                console.log(res)
                  ctx.body = {
                      code: 200,
                      message: '添加成功'
@@ -553,7 +568,7 @@ router.post('/api/addClass', koaBody(),async(ctx) => {
             }).catch(err=>{
                  ctx.body = {
                      code: 500,
-                     message: '添加失败'
+                     message: err.message
                  }
             })
         
@@ -565,7 +580,7 @@ router.post('/api/addClass', koaBody(),async(ctx) => {
 })
 
 router.post('/api/getStudentClass',koaBody(),async(ctx)=>{
-    
+    console.log('student_id', ctx.request.body.student_id);
     await apiModel.getClassesByStudentId(ctx.request.body.student_id)
         .then(res=>{
             console.log(res)
