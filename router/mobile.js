@@ -480,6 +480,28 @@ router.get('/api/getteachers', koaBody(), async(ctx)=>{
     })
 })
 
+router.post('/api/getteachers',koaBody(),async(ctx)=>{
+    
+    await apiModel.getTeachersById(ctx.request.body.teacher_id)
+        .then(res=>{
+            console.log(res)
+            if (res.length >= 1 ) {
+                // console.log(Object.assign({},res[0]))
+                ctx.body = {
+                    code: 200,
+                    data: res
+                }
+            }else{
+                ctx.body = {
+                    code: 200
+                }
+            }
+        }).catch(err=>{
+            ctx.body = 'none'
+        })
+
+})
+
 router.get('/api/getClasses', koaBody(), async(ctx) => {
     var val = ctx.request.body.val
     // console.log(val)
