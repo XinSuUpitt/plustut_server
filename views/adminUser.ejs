@@ -3,14 +3,14 @@
 	 	<thead>
 	    	<tr>
 		      	<th>ID</th>
-		      	<th>用户名</th>
+		      	<th>老师名称</th>
 	    	</tr>
 	  	</thead>
 		<tbody>
 		 <% users.forEach(function(user){ %>
 			<tr>
 	    		<td><%=  user.id %></td>
-	    		<td><%=  user.username %></td>
+	    		<td><%=  user.name %></td>
 	    	</tr>
 		 <% }) %>
 		</tbody>

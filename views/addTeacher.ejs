@@ -1,0 +1,90 @@
+<% include header %>
+
+<div class="ui form segment" onsubmit="return"  style="width: 60%;margin:0 auto 40px">
+  <div class="field">
+    <label>老师姓名</label>
+    <input type="text" name="name" placeholder="老师姓名">
+  </div>
+  <div class="field">
+      <label>老师邮箱</label>
+      <input type="text" name="email" placeholder="老师邮箱">
+  </div>
+  <div class="field">
+    <label>老师密码</label>
+    <input type="text" name="password" placeholder="密码">
+  </div>
+  <!-- <div class="fields">
+    <div class="field">
+     <label>老师图片</label>
+     <input type="file" name="file" multiple>
+    </div>
+  </div> -->
+  <div class="field">
+    <label>老师电话</label>
+    <input type="text" name="phone_number" placeholder="老师电话">
+  </div>
+  <div class="field">
+    <label>老师微信</label>
+    <input type="text" name="wechat" placeholder="老师微信">
+  </div>
+
+  <div class="ui button submit">Submit</div>
+  <div class="ui reset button">重置</div>
+  <div class="ui clear button">清除提示</div>
+</div>
+
+<script>
+  $(function(){
+    $('select.dropdown').dropdown()
+    var formdata = new FormData()
+    
+    
+    var isAllow = true
+    if(!isAllow) return
+    $('.ui.form')
+    .form({
+      inline : true,
+      on  : 'blur',
+      onSuccess: function () {
+        isAllow = false;
+        ['name', 'email', 'password', 'phone_number', 'wechat'].forEach(function (val) {
+            formdata.append(val, $('input[name=' + val + ']').val())
+        });
+        $.ajax({
+            url: '/admin/addTeacher',
+            type: 'POST',
+            cache: false,
+            data: formdata,
+            processData: false,
+            contentType: false,
+            dataType: "json",
+            success: function (data) {
+                isAllow = true
+                if (data.code == 200) {
+                    alert('上传成功')
+                    location.href = '/admin'
+                    formdata = new FormData()
+                }else{
+                  alert('上传失败')  
+                  formdata = new FormData()
+                }
+            }
+        });
+      }
+       ,
+      fields: {
+        name: {
+          identifier: 'articleName',
+          rules: [
+            {
+              type   : 'empty',
+              prompt : '请输入名称！'
+            }
+          ]
+        }
+      }
+    })
+  ;
+  })
+</script>
+<% include footer %>   

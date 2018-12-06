@@ -68,6 +68,14 @@ router.get('/admin/upload', async(ctx, next) => {
         session: ctx.session
     })
 })
+
+router.get('/admin/addTeacher', async(ctx, next) => {
+    await checkLogin(ctx)
+    await ctx.render('addTeacher', {
+        session: ctx.session
+    })
+    console.log('add teacher')
+})
 // 上传article数据 post
 router.post('/admin/upload', koaBody({
     multipart: true,
@@ -111,17 +119,38 @@ router.post('/admin/uploadClass', koaBody({
 
     var i_body = Object.assign({},ctx.request.body)
     console.log('i_body', i_body)
-    let {class_name,elementary, teacher_id,price,start_time,
-        end_time, class_start_date, class_end_date, weekday, description} = i_body['fields']
-    if (elementary === '小学') {
-        elementary = 0;
-    } else {
-        elementary = 1;
-    }
-    var data = [class_name,parseInt(elementary), parseInt(teacher_id),parseInt(price),start_time,
-        end_time, class_start_date, class_end_date, parseInt(weekday[1]), description]
+    let {name,code, teacher_id,price,start_time,
+        end_time, start_date, end_date, week_day, description} = i_body['fields']
+    var data = [name, code, parseInt(price),parseInt(teacher_id),start_time,
+        end_time, start_date, end_date, parseInt(week_day[1]), description]
     console.log(data)
     await apiModel.insertClass(data)
+        .then((res) => {
+            console.log('添加成功')
+            ctx.body = {
+                code:200,
+                message:'上传成功'
+            }
+        }).catch(res => {
+            ctx.body = {
+                code: 500,
+                message: '上传失败'
+            }
+        })
+        
+})
+
+router.post('/admin/addTeacher', koaBody({
+    multipart: true,
+    "jsonLimit":"5mb"
+}), async(ctx, next) => {
+
+    var i_body = Object.assign({},ctx.request.body)
+    console.log('i_body', i_body)
+    let {name,email, password,phone_number,wechat} = i_body['fields']
+    var data = [name, email, password,'', phone_number,wechat]
+    console.log(data)
+    await apiModel.insertTeacher(data)
         .then((res) => {
             console.log('添加成功')
             ctx.body = {
