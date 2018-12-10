@@ -13,8 +13,8 @@ module.exports = {
 		let token = ctx.get('token')
 		// console.log('token', ctx.get('token'))
 		var data = ctx.request.body
-		let {userName} = data
-		console.log('token', token, userName)
+		let {email} = data
+		console.log('token', token, email)
 		return new Promise((reslove,reject)=>{
 			jwt.verify(token, config.jwt_secret, (err, decoded) => {
 				if (err) {

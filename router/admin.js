@@ -38,21 +38,22 @@ router.get('/admin/signin', async(ctx, next) => {
 })
 // 登录 post
 router.post('/admin/signin', koaBody(), async(ctx, next) => {
-    var {userName,password} = ctx.request.body
-    await apiModel.findUser(userName)
+    var {email,password} = ctx.request.body
+    await apiModel.findUser(email)
         .then(res => {
-            // console.log(res,res[0].username)
-            if (res[0]['username'] === userName) {
-                ctx.session.user = userName;
+            
+            if (res[0]['email'] === email) {
+                console.log('成功', res[0]['email'], email)
+                ctx.session.user = email;
                 ctx.session.pass = password;
-                ctx.redirect('/admin')
+                ctx.redirect('/admin/classlist?page=1')
             }
         }).catch(() => {
-            ctx.session.user = userName;
+            ctx.session.user = email;
             ctx.session.pass = password;
-            apiModel.addUser([userName, password])
+            apiModel.addUser([email, password])
         })
-    await ctx.redirect('/admin')
+    // await ctx.redirect('/admin')
 
 })
 // 登出
@@ -243,6 +244,16 @@ router.post('/admin/delete/:id', koaBody(), async(ctx, next) => {
         })    
 })
 
+router.post('/admin/deleteClassById/:id', koaBody(), async(ctx, next) => {
+    console.log('delete Class');
+    await apiModel.deleteClass(ctx.params.id)
+        .then(() => {
+            ctx.body = 'success'
+        }).catch((err) => {
+            console.log(err)
+        })    
+})
+
 // 后台管理员列表
 router.get('/admin/adminUser',async(ctx,next)=>{
     var page,
@@ -302,6 +313,72 @@ router.get('/admin/classlist',async(ctx,next)=>{
         dataLength = res.length
     })
     await apiModel.findPageData('classes', page, 7).then(res => {
+        data = res
+    })
+    for (var i = 0; i < data.length; i++) {
+        await apiModel.getTeachersById(data[i].teacher_id).then(res => {
+            console.log('teacher', res);
+            data[i].teacherName = res[0].username;
+        })
+        var startDate = new Date(data[i].start_date)
+        var endDate = new Date(data[i].end_date)
+        data[i].start_date = (startDate.getMonth() + 1) + '/' + startDate.getDate() + '/' + startDate.getFullYear()
+        data[i].end_date = (endDate.getMonth() + 1) + '/' + endDate.getDate() + '/' + endDate.getFullYear()
+        switch (data[i].week_day) {
+            case 0:
+                data[i].week_day = '星期日'
+                break;
+            case 1:
+                data[i].week_day = '星期一'
+                break;
+            case 2:
+                data[i].week_day = '星期二'
+                break;
+            case 3:
+                data[i].week_day = '星期三'
+                break;
+            case 4:
+                data[i].week_day = '星期四'
+                break;
+            case 5:
+                data[i].week_day = '星期五'
+                break;
+            case 6:
+                data[i].week_day = '星期六'
+                break;
+            default:
+                data[i].week_day = '未确定日期'
+
+        }
+        
+    }
+    await ctx.render('classlist', {
+        classes: data,
+        session: ctx.session,
+        dataLength: Math.ceil(dataLength / 7),
+        nowPage:  parseInt(page)
+    })
+})
+
+// 手机端用户列表
+router.get('/admin/myClass',async(ctx,next)=>{
+    var page,
+     dataLength = '';
+     var teacherId;
+    if (ctx.querystring == '') {
+        page = 1
+    }else{
+        page = ctx.querystring.split('=')[1];
+    }
+    apiModel.getTeachersByName(ctx.session.user).then(res => {
+        console.log('id',res);
+        teacherId = res[0].id;
+    });
+    await apiModel.getClassesByTeacherId(teacherId).then(res => {
+        dataLength = res.length
+    })
+    await apiModel.getPageClassesByTeacherId(teacherId, page, 7).then(res => {
+        console.log('idid',teacherId);
         data = res
     })
     for (var i = 0; i < data.length; i++) {

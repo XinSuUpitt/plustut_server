@@ -33,8 +33,8 @@
 	</div>
 	<form class="ui form segment" method="post" action="/admin/signin" style="width: 30%;margin: 0 auto;">
 	  <div class="field">
-	    <label>用户名</label>
-	    <input type="text" name="userName" placeholder="用户名">
+	    <label>用户邮箱</label>
+	    <input type="text" name="email" placeholder="用户邮箱">
 	  </div>
 	  <div class="field">
 	    <label>密码</label>
@@ -50,8 +50,8 @@ $(function(){
       	inline : true,
     	on   : 'blur',
     	fields: {
-	       userName: {
-	        identifier: 'userName',
+				email: {
+	        identifier: 'email',
 	        rules: [
 	          {
 	            type   : 'empty',
