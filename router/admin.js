@@ -168,7 +168,7 @@ router.post('/admin/addTeacher', koaBody({
 })
 // 编辑页面
 router.get('/admin/edit/:id', async(ctx, next) => {
-    // console.log('params.id', ctx.params.id)
+    console.log('test')
     await apiModel.findDataById(ctx.params.id)
         .then(res => {
             data = JSON.parse(JSON.stringify(res))
@@ -190,6 +190,7 @@ router.post('/admin/edit/:id', koaBody({
 }), async(ctx, next) => {
     var i_body = Object.assign({}, ctx.request.body)
     console.log('i_body', i_body)
+    console.log('test 2 ')
     let {
         videoName,
         videoCountry,
@@ -242,6 +243,32 @@ router.post('/admin/delete/:id', koaBody(), async(ctx, next) => {
         }).catch((err) => {
             // console.log(err)
         })    
+})
+
+// 编辑页面
+router.get('/admin/studentsListByClass/:id', async(ctx, next) => {
+    console.log('studentsListByClass', ctx.params.id)
+    var page,
+    dataLength = '';
+    if (ctx.querystring == '') {
+        page = 1
+    }else{
+        page = ctx.querystring.split('=')[1];
+    }
+    // await checkLogin(ctx)
+    await apiModel.findStudentListByClassId(ctx.params.id).then(res => {
+        dataLength = res.length
+    })
+    await apiModel.findStudentListPageByClassId(ctx.params.id, page, 7).then(res => {
+        data = res
+    })
+    console.log('studentsListByClass data', data);
+    await ctx.render('studentsListByClass', {
+        users: data,
+        session: ctx.session,
+        dataLength: Math.ceil(dataLength / 7),
+        nowPage:  parseInt(page)
+    })
 })
 
 router.post('/admin/deleteClassById/:id', koaBody(), async(ctx, next) => {
@@ -352,6 +379,8 @@ router.get('/admin/classlist',async(ctx,next)=>{
         }
         
     }
+
+    console.log('classlist', data);
     await ctx.render('classlist', {
         classes: data,
         session: ctx.session,
@@ -418,7 +447,7 @@ router.get('/admin/myClass',async(ctx,next)=>{
         }
         
     }
-    await ctx.render('classlist', {
+    await ctx.render('myClass', {
         classes: data,
         session: ctx.session,
         dataLength: Math.ceil(dataLength / 7),

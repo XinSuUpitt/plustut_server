@@ -1,0 +1,19 @@
+<% include header %>
+	<table class="ui striped table">
+	 	<thead>
+	    	<tr>
+		      	<th>ID</th>
+		      	<th>老师名称</th>
+	    	</tr>
+	  	</thead>
+		<tbody>
+		 <% users.forEach(function(user){ %>
+			<tr>
+	    		<td><%=  user.student_id %></td>
+	    		<td><%=  user.class_id %></td>
+	    	</tr>
+		 <% }) %>
+		</tbody>
+	</table>
+	<%- include("pagination",{type:'adminUser'}) %>
+<% include footer %>          

@@ -23,8 +23,8 @@
 					<td><%= singleClass.price %></td>
 					<td><%= singleClass.start_time + ' 至 ' + singleClass.end_time %></td>
 					<td><%= singleClass.start_date + ' 至 ' + singleClass.end_date + ' 每 ' + singleClass.week_day %></td>
-					<td><a href="/edit/<%= singleClass.id %>"><button class="ui primary button" title="编辑">Edit </button></a></td>
-					<td><button v-id="<%= singleClass.id %>" class="ui primary button delete" title="删除">Delete </button></td>
+					<td><a href="/edit/<%= singleClass.id %>"><button class="ui primary button" title="编辑">Edit</button></a></td>
+					<td><button v-id="<%= singleClass.id %>" class="ui primary button delete" title="删除">Delete</button></td>
 				</tr>
 			<% }) %>
 		  </tbody>
@@ -34,7 +34,7 @@
 		$('.ui.dropdown').dropdown()
 		$(function(){
 			$('.delete').click((e)=>{
-				console.log(e.target.getAttribute('v-id'))
+				console.log('delete', e.target.getAttribute('v-id'))
 				$.ajax({
 					url:'/admin/deleteClassById/'+e.target.getAttribute('v-id'),
 					type:'POST',

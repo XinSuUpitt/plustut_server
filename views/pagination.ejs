@@ -1,6 +1,6 @@
 <div id="page">
 	<% if(dataLength == 0 ){ %>
-		<p>现在还没有数据，赶快去添加吧！</p>
+		<!-- <p>现在还没有数据，赶快去添加吧！</p> -->
 	<% }else{ %>
 		<% min =  nowPage - 2 < 1 ? 1 : nowPage - 2 %>
 		<% max =  nowPage + 2 > dataLength ? dataLength : nowPage + 2 %>
