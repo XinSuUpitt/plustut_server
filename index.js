@@ -46,6 +46,6 @@ app.use(koaBody({ multipart: true,formidable:{uploadDir: path.join(__dirname,'./
 
 app.use(serve(__dirname));
 
-app.listen(3000)
+app.listen(80)
 
 console.log('listen in 3000')
