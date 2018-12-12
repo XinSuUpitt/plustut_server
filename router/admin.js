@@ -262,7 +262,6 @@ router.get('/admin/studentsListByClass/:id', async(ctx, next) => {
     await apiModel.findStudentListPageByClassId(ctx.params.id, page, 7).then(res => {
         data = res
     })
-    console.log('studentsListByClass data', data);
     await ctx.render('studentsListByClass', {
         users: data,
         session: ctx.session,
@@ -324,28 +323,28 @@ router.post('/admin/AddStudentToClass', koaBody({
         })
 
 
-    var page,
-    dataLength = '';
-    if (ctx.querystring == '') {
-        page = 1
-    }else{
-        page = ctx.querystring.split('=')[1];
-    }
-    // await checkLogin(ctx)
-    await apiModel.findStudentListByClassId(ctx.params.id).then(res => {
-        dataLength = res.length
-    })
-    await apiModel.findStudentListPageByClassId(ctx.params.id, page, 7).then(res => {
-        data = res
-    })
-    console.log('studentsListByClass data', class_id);
-    await ctx.render('studentsListByClass', {
-        users: data,
-        session: ctx.session,
-        dataLength: Math.ceil(dataLength / 7),
-        nowPage:  parseInt(page),
-        classId: class_id
-    })
+    // var page,
+    // dataLength = '';
+    // if (ctx.querystring == '') {
+    //     page = 1
+    // }else{
+    //     page = ctx.querystring.split('=')[1];
+    // }
+    // // await checkLogin(ctx)
+    // await apiModel.findStudentListByClassId(ctx.params.id).then(res => {
+    //     dataLength = res.length
+    // })
+    // await apiModel.findStudentListPageByClassId(ctx.params.id, page, 7).then(res => {
+    //     data = res
+    // })
+    // console.log('studentsListByClass data', class_id);
+    // ctx.render('studentsListByClass', {
+    //     users: data,
+    //     session: ctx.session,
+    //     dataLength: Math.ceil(dataLength / 7),
+    //     nowPage:  parseInt(page),
+    //     classId: class_id
+    // })
         
 })
 

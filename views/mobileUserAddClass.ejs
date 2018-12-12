@@ -53,8 +53,12 @@
 					contentType: false,
 					dataType: "json",
 					success:function(res){
-						
-					}	
+						console.log('success')
+						window.location.href='/admin/studentsListByClass/' + e.target.getAttribute('v-id')
+					},
+					fail:function(res) {
+						window.location.href='/admin/studentsListByClass/' + e.target.getAttribute('v-id')
+					}
 				})
 			})
 		})
