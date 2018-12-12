@@ -267,8 +267,86 @@ router.get('/admin/studentsListByClass/:id', async(ctx, next) => {
         users: data,
         session: ctx.session,
         dataLength: Math.ceil(dataLength / 7),
-        nowPage:  parseInt(page)
+        nowPage:  parseInt(page),
+        classId: ctx.params.id
     })
+})
+
+router.get('/admin/showStudentsAddClass/:id', async(ctx, next) => {
+    console.log('showStudentsAddClass', ctx.params.id)
+    var page,
+        dataLength = '';
+    if (ctx.querystring == '') {
+        page = 1
+    }else{
+        page = ctx.querystring.split('=')[1];
+    }
+    await apiModel.findData('students').then(res => {
+        dataLength = res.length
+    })
+    await apiModel.findPageData('students',page,10).then(res=>{
+        data = res
+    })
+    await ctx.render('mobileUserAddClass',{
+        users:data,
+        session:ctx.session,
+        dataLength: Math.ceil(dataLength / 10),
+        nowPage:  parseInt(page),
+        classId: ctx.params.id
+    })
+})
+
+router.post('/admin/AddStudentToClass', koaBody({
+    multipart: true,
+    "jsonLimit":"5mb"
+}), async(ctx, next) => {
+
+    console.log('AddStudentToClass')
+    var i_body = Object.assign({},ctx.request.body)
+    console.log('i_body', i_body)
+    let {student_id,student_name,phone_number,wechat,
+        class_id} = i_body['fields']
+    var data = [student_id, student_name, phone_number, wechat,
+        class_id]
+    console.log(data)
+    await apiModel.insertStudentToClass(data)
+        .then((res) => {
+            console.log('添加成功')
+            ctx.body = {
+                code:200,
+                message:'上传成功'
+            }
+        }).catch(res => {
+            ctx.body = {
+                code: 500,
+                message: '上传失败'
+            }
+        })
+
+
+    var page,
+    dataLength = '';
+    if (ctx.querystring == '') {
+        page = 1
+    }else{
+        page = ctx.querystring.split('=')[1];
+    }
+    // await checkLogin(ctx)
+    await apiModel.findStudentListByClassId(ctx.params.id).then(res => {
+        dataLength = res.length
+    })
+    await apiModel.findStudentListPageByClassId(ctx.params.id, page, 7).then(res => {
+        data = res
+    })
+    console.log('studentsListByClass data', class_id);
+    await ctx.render('studentsListByClass', {
+        users: data,
+        session: ctx.session,
+        dataLength: Math.ceil(dataLength / 7),
+        nowPage:  parseInt(page),
+        classId: class_id
+    })
+        
 })
 
 router.post('/admin/deleteClassById/:id', koaBody(), async(ctx, next) => {

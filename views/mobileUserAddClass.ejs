@@ -1,0 +1,62 @@
+<% include header %>
+	<table class="ui striped table">
+	 	<thead>
+	    	<tr>
+		      	<th>学生ID</th>
+				  <th>学生姓名</th>
+				  <th>学生头像</th>
+				  <th>学生邮箱</th>
+				  <th>学生电话</th>
+				  <th>学生微信</th>
+				  <th>添加到课程</th>
+	    	</tr>
+	  	</thead>
+		<tbody>
+		 <% users.forEach(function(user){ %>
+			<tr>
+	    		<td><%=  user.id %></td>
+				<td><%=  user.name %></td>
+	    		<td>
+	    			<% if(user.avator!=''){ %>
+	    				<img src="http://vue.wclimb.site/images/avator/<%=  user.avator %>.png" alt="">
+	    			<% }else{ %>
+	    				还没有上传头像！
+	    			<% } %>
+				</td>
+				<td><%= user.email %></td>
+				<td><%= user.phone_number %></td>
+				<td><%= user.wechat %></td>
+				<!-- <td><a href="/admin/AddStudentToClass/<%= classId %>/<%= user %>"><button class="ui primary button" title="添加">添加</button></a></td> -->
+				<td><button v-id="<%= classId %>" v-id2="<%= user.id %>" v-id3="<%= user.name %>" v-id4="<%= user.phone_number %>" v-id5="<%= user.wechat %>" class="ui primary button delete" title="添加">添加</button></td>
+			</tr>
+		 <% }) %>
+			</tbody>
+	</table>
+	<%- include("pagination",{type:'mobileUser'}) %>
+	<script>
+		$('.ui.dropdown').dropdown()
+		$(function(){
+
+			$('.delete').click((e)=>{
+				var formdata = new FormData()
+				console.log('delete', e.target.getAttribute('v-id'), e.target.getAttribute('v-id2'), e.target.getAttribute('v-id3'), e.target.getAttribute('v-id4'), e.target.getAttribute('v-id5'))
+				formdata.append('student_id', e.target.getAttribute('v-id2'))
+				formdata.append('student_name', e.target.getAttribute('v-id3'))
+				formdata.append('phone_number', e.target.getAttribute('v-id4'))
+				formdata.append('wechat', e.target.getAttribute('v-id5'))
+				formdata.append('class_id', e.target.getAttribute('v-id'))
+				$.ajax({
+					url:'/admin/AddStudentToClass',
+					type:'POST',
+					data: formdata,
+					processData: false,
+					contentType: false,
+					dataType: "json",
+					success:function(res){
+						
+					}	
+				})
+			})
+		})
+	</script>
+<% include footer %>          
