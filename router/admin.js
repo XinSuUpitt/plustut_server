@@ -31,7 +31,7 @@ router.get('/admin', async(ctx, next) => {
 // 获取登录页面
 router.get('/admin/signin', async(ctx, next) => {
     if (ctx.session.user) {
-        await ctx.redirect('/admin')
+        await ctx.redirect('/admin/classlist?page=1')
     } else {
         await ctx.render('signin')
     }
