@@ -120,9 +120,9 @@ router.post('/admin/uploadClass', koaBody({
 
     var i_body = Object.assign({},ctx.request.body)
     console.log('i_body', i_body)
-    let {name,code, teacher_id,price,start_time,
+    let {name,code_level_1, code_level_2, code_level_3, code_level_4, code_level_5, teacher_id,price,start_time,
         end_time, start_date, end_date, week_day, description} = i_body['fields']
-    var data = [name, code, parseInt(price),parseInt(teacher_id),start_time,
+    var data = [name, code_level_1, code_level_2, code_level_3, code_level_4, code_level_5, parseInt(price),parseInt(teacher_id),start_time,
         end_time, start_date, end_date, parseInt(week_day[1]), description]
     console.log(data)
     await apiModel.insertClass(data)

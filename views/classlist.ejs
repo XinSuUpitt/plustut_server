@@ -2,12 +2,16 @@
 	<table class="ui striped table">
 	 	<thead>
 	    	<tr>
-		      	<th>ID</th>
 				<th>课程名</th>
 				<th>课程代码</th>
+				<th>通用范围</th>
+				<th>科目</th>
+				<th>年级</th>
+				<th>科目细分</th>
+				<th>程度</th>
 				<th>课程老师id</th>
 				<th>收费标准</th>
-				<th>上课时间</th>
+				<!-- <th>上课时间</th> -->
 				<th>上课日期</th>
 				<th>编辑</th>
 				<th>删除</th>
@@ -16,12 +20,16 @@
 		  <tbody>
 			  <% classes.forEach(function(singleClass){ %>
 				<tr>
-					<td><%= singleClass.id %></td>
 					<td><%= singleClass.name %></td>
-					<td><%= singleClass.code %></td>
+					<td><%= singleClass.code_level_1 + singleClass.code_level_2 + singleClass.code_level_3 + singleClass.code_level_4 + singleClass.code_level_5 %></td>
+					<td><%= singleClass.code_level_1 === 'C' ? '内地' : (singleClass.code_level_1 === 'H' ? '香港' : '通用') %></td>
+					<td><%= singleClass.code_level_2 %></td>
+					<td><%= singleClass.code_level_3 %></td>
+					<td><%= singleClass.code_level_4 %></td>
+					<td><%= singleClass.code_level_5 === 'A' ? '培优' : '基础'%></td>
 					<td><%= singleClass.teacher_id %></td>
 					<td><%= singleClass.price %></td>
-					<td><%= singleClass.start_time + ' 至 ' + singleClass.end_time %></td>
+					<!-- <td><%= singleClass.start_time + ' 至 ' + singleClass.end_time %></td> -->
 					<td><%= singleClass.start_date + ' 至 ' + singleClass.end_date + ' 每 ' + singleClass.week_day %></td>
 					<td><a href="/edit/<%= singleClass.id %>"><button class="ui primary button" title="编辑">Edit</button></a></td>
 					<td><button v-id="<%= singleClass.id %>" class="ui primary button delete" title="删除">Delete</button></td>
@@ -33,6 +41,7 @@
 	<script>
 		$('.ui.dropdown').dropdown()
 		$(function(){
+			// console.log('singleClass', )
 			$('.delete').click((e)=>{
 				console.log('delete', e.target.getAttribute('v-id'))
 				$.ajax({
