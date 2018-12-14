@@ -134,9 +134,9 @@
 
   <div class="field">
     <label>上课日期</label>
-    <input type="date" name="start_date" placeholder="上课起始日期">
+    <input type="date" name="start_date" placeholder="上课起始日期" id="start_date_id">
     <label> 至 </label>
-    <input type="date" name="end_date" placeholder="上课结束日期">
+    <input type="date" name="end_date" placeholder="上课结束日期" id="end_date_id">
   </div>
 
   <div class="field">
@@ -219,6 +219,14 @@
   $(function(){
     $('select.dropdown').dropdown()
     var formdata = new FormData()
+
+    Date.prototype.toDateInputValue = (function() { 
+      var local = new Date(this); 
+      local.setMinutes(this.getMinutes() - this.getTimezoneOffset()); 
+      return local.toJSON().slice(0,10); 
+    });
+    document.getElementById("start_date_id").value=new Date().toDateInputValue();
+    document.getElementById("end_date_id").value=new Date().toDateInputValue();
     
     
     var isAllow = true
