@@ -25,7 +25,7 @@ router.post('/api/signin', koaBody(), async (ctx, next) => {
     await apiModel.findMobileUserByName(name)
         .then(res => {
             // console.log('用户信息', res)
-            if (res[0]['userName'] === name && res[0]['password'] === pass) {
+            if (res[0]['email'] === name && res[0]['password'] === pass) {
                 ctx.body = {
                     code: 200,
                     avator: res[0]['avator'],
