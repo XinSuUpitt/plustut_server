@@ -533,7 +533,7 @@ router.get('/admin/myClass',async(ctx,next)=>{
         page = ctx.querystring.split('=')[1];
     }
     apiModel.getTeachersByName(ctx.session.user).then(res => {
-        if (typeof res[0] !== 'undefined') {
+        if (typeof res[0] !== 'undefined' && res !== null && typeof res !== 'undefined') {
             console.log('id',res);
             teacherId = res[0].id;
         }
@@ -593,7 +593,7 @@ router.get('/admin/myClass',async(ctx,next)=>{
 router.get('/admin/getClassesCalendar', async(ctx, next) => {
     var userId = 1;
     await apiModel.getTeachersByName(ctx.session.user).then(res => {
-        if (typeof res[0] !== 'undefined') {
+        if (typeof res[0] !== 'undefined' && res !== null && typeof res !== 'undefined') {
             userId = res[0].id;
             console.log('userid', userId);
         }
