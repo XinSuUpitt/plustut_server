@@ -526,15 +526,17 @@ router.get('/admin/classlist',async(ctx,next)=>{
 router.get('/admin/myClass',async(ctx,next)=>{
     var page,
      dataLength = '';
-     var teacherId;
+     var teacherId = 1;
     if (ctx.querystring == '') {
         page = 1
     }else{
         page = ctx.querystring.split('=')[1];
     }
     apiModel.getTeachersByName(ctx.session.user).then(res => {
-        console.log('id',res);
-        teacherId = res[0].id;
+        if (typeof res[0] !== 'undefined') {
+            console.log('id',res);
+            teacherId = res[0].id;
+        }
     });
     await apiModel.getClassesByTeacherId(teacherId).then(res => {
         dataLength = res.length
@@ -591,8 +593,10 @@ router.get('/admin/myClass',async(ctx,next)=>{
 router.get('/admin/getClassesCalendar', async(ctx, next) => {
     var userId = 1;
     await apiModel.getTeachersByName(ctx.session.user).then(res => {
-        userId = res[0].id;
-        console.log('userid', userId);
+        if (typeof res[0] !== 'undefined') {
+            userId = res[0].id;
+            console.log('userid', userId);
+        }
     }).catch((err) => {
 
     });
