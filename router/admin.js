@@ -123,9 +123,64 @@ router.post('/admin/uploadClass', koaBody({
     let {name,code_level_1, code_level_2, code_level_3, code_level_4, code_level_5, teacher_id,price,start_time,
         end_time, start_date, end_date, week_day, description} = i_body['fields']
     var data = [name, code_level_1, code_level_2, code_level_3, code_level_4, code_level_5, parseInt(price),parseInt(teacher_id),start_time,
-        end_time, start_date, end_date, parseInt(week_day[1]), description]
+        end_time, start_date, end_date, parseInt(week_day[0]), description]
     console.log(data)
     await apiModel.insertClass(data)
+        .then((res) => {
+            console.log('添加成功')
+            ctx.body = {
+                code:200,
+                message:'上传成功'
+            }
+        }).catch(res => {
+            ctx.body = {
+                code: 500,
+                message: '上传失败'
+            }
+        })
+        
+})
+
+router.post('/admin/updateCurrClass', koaBody({
+    multipart: true,
+    "jsonLimit":"5mb"
+}), async(ctx, next) => {
+
+    var i_body = Object.assign({},ctx.request.body)
+    console.log('i_body', i_body);
+    let {id, name,code_level_1, code_level_2, code_level_3, code_level_4, code_level_5, teacher_id,price,start_time,
+        end_time, start_date, end_date, week_day, description} = i_body['fields']
+    
+    var weekDayValue = 0;
+    switch(week_day[0]) {
+        case '星期一':
+            weekDayValue = 1;
+            break;
+        case '星期二':
+            weekDayValue = 2;
+            break;
+        case '星期三':
+            weekDayValue = 3;
+            break;
+        case '星期四':
+            weekDayValue = 4;
+            break;
+        case '星期五':
+            weekDayValue = 5;
+            break;
+        case '星期六':
+            weekDayValue = 6;
+            break;
+        case '星期日':
+            weekDayValue = 0;
+            break;
+        default:
+            break;
+    }
+    var data = [name, code_level_1, code_level_2, code_level_3, code_level_4, code_level_5, parseInt(price),parseInt(teacher_id),start_time,
+        end_time, start_date, end_date, weekDayValue, description, id]
+    console.log('updateClass', data)
+    await apiModel.updateClass(data)
         .then((res) => {
             console.log('添加成功')
             ctx.body = {
@@ -168,13 +223,14 @@ router.post('/admin/addTeacher', koaBody({
 })
 // 编辑页面
 router.get('/admin/edit/:id', async(ctx, next) => {
-    console.log('test')
-    await apiModel.findDataById(ctx.params.id)
+    
+    await apiModel.findClassById(ctx.params.id)
         .then(res => {
             data = JSON.parse(JSON.stringify(res))
+            console.log('test', res)
         })
     await ctx.render('edit', {
-        video: data[0],
+        classInfo: data[0],
         session: ctx.session
     })
 })
