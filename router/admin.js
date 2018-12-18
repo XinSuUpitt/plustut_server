@@ -122,8 +122,35 @@ router.post('/admin/uploadClass', koaBody({
     console.log('i_body', i_body)
     let {name,code_level_1, code_level_2, code_level_3, code_level_4, code_level_5, teacher_id,price,start_time,
         end_time, start_date, end_date, week_day, description} = i_body['fields']
+
+    var weekDayValue = 0;
+    switch(week_day[0]) {
+        case '星期一':
+            weekDayValue = 1;
+            break;
+        case '星期二':
+            weekDayValue = 2;
+            break;
+        case '星期三':
+            weekDayValue = 3;
+            break;
+        case '星期四':
+            weekDayValue = 4;
+            break;
+        case '星期五':
+            weekDayValue = 5;
+            break;
+        case '星期六':
+            weekDayValue = 6;
+            break;
+        case '星期日':
+            weekDayValue = 0;
+            break;
+        default:
+            break;
+    }
     var data = [name, code_level_1, code_level_2, code_level_3, code_level_4, code_level_5, parseInt(price),parseInt(teacher_id),start_time,
-        end_time, start_date, end_date, parseInt(week_day[0]), description]
+        end_time, start_date, end_date, weekDayValue, description]
     console.log(data)
     await apiModel.insertClass(data)
         .then((res) => {
