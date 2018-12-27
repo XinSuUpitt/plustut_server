@@ -12,6 +12,7 @@
 				<th>收费标准</th>
 				<th>上课时间</th>
 				<th>上课日期</th>
+				<th>编辑课程</th>
 				<th>报名学生</th>
 				<th>删除</th>
 	    	</tr>
@@ -29,6 +30,7 @@
 					<td><%= singleClass.price %></td>
 					<td><%= singleClass.start_time + ' 至 ' + singleClass.end_time %></td>
 					<td><%= singleClass.start_date + ' 至 ' + singleClass.end_date + ' 每 ' + singleClass.week_day %></td>
+					<td><a href="/admin/edit/<%= singleClass.id %>"><button class="ui primary button" title="编辑">Edit</button></a></td>
 					<td><a href="/admin/studentsListByClass/<%= singleClass.id %>"><button class="ui primary button" title="查看">查看</button></a></td>
 					<td><button v-id="<%= singleClass.id %>" class="ui primary button delete" title="删除">Delete</button></td>
 				</tr>
