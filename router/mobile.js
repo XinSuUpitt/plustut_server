@@ -50,6 +50,9 @@ router.post('/api/register', koaBody(), async (ctx, next) => {
     data = typeof data == 'string' ? JSON.parse(data) : data
     var name = data.userName
     var pass = data.password;
+    var email = data.email;
+    var phoneNumber = data.phoneNumber;
+    var wechat = data.wechat;
     
     let token = jwt.sign({
         userName: name
@@ -79,7 +82,7 @@ router.post('/api/register', koaBody(), async (ctx, next) => {
                 msg: '注册成功',
                 token: token
             }
-            apiModel.addMobileUser([name, pass, moment().format('YYYY-MM-DD HH:mm')])
+            apiModel.addMobileUser([name, email, pass, phoneNumber, wechat, moment().format('YYYY-MM-DD HH:mm')])
         })
 })
 // 获取三个列表的数据
